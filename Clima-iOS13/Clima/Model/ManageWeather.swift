@@ -13,6 +13,30 @@ struct ManageWeather {
     
     func fetchWeather(cityName : String) {
         let urlString = "\(weatherURL)&q=\(cityName)"
-        print(urlString)
+        performRequest(urlString: urlString)
+    }
+    
+    func performRequest(urlString : String) {
+        // create url
+        if let url = URL(string: urlString) {
+            // create url session
+            let session = URLSession(configuration: .default)
+            // give the session a task
+            let task = session.dataTask(with: url, completionHandler: handler(data:response:error:))
+            // start the task
+            task.resume()
+        }
+    }
+    
+    func handler(data : Data? , response : URLResponse? , error : Error?){
+        if error != nil {
+            print(error!)
+            return
+        }
+        
+        if let safeData = data {
+            let dataString = String(data: safeData, encoding: .utf8)
+            print(dataString)
+        }
     }
 }

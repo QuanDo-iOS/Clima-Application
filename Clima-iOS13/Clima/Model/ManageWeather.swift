@@ -17,26 +17,32 @@ struct ManageWeather {
     }
     
     func performRequest(urlString : String) {
-        // create url
         if let url = URL(string: urlString) {
-            // create url session
             let session = URLSession(configuration: .default)
-            // give the session a task
-            let task = session.dataTask(with: url, completionHandler: handler(data:response:error:))
-            // start the task
+            
+            let task = session.dataTask(with: url) { data, response, error in
+                if error != nil {
+                    print(error!)
+                    return
+                }
+                if let safeData = data {
+                    self.parseData(weatherData: safeData)
+                }
+            }
             task.resume()
         }
     }
     
-    func handler(data : Data? , response : URLResponse? , error : Error?){
-        if error != nil {
-            print(error!)
-            return
+    func parseData(weatherData : Data ) {
+        let decoder = JSONDecoder()
+        do {
+            let decodeData = try decoder.decode(WeatherData.self, from: weatherData)
+            print(decodeData.main.temp)
+            print(decodeData.weather[0].description)
+        } catch {
+            print(error)
         }
         
-        if let safeData = data {
-            let dataString = String(data: safeData, encoding: .utf8)
-            print(dataString)
-        }
     }
+    
 }

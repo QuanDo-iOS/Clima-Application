@@ -9,7 +9,8 @@
 import UIKit
 
 protocol WeatherManagerDelegate {
-    func didUpdateWeather(weather : WeatherModel)
+    func didUpdateWeather(manageWeather : ManageWeather , weather : WeatherModel)
+    func didFailWithError(error : Error)
 }
 
 struct ManageWeather {
@@ -28,12 +29,12 @@ struct ManageWeather {
             
             let task = session.dataTask(with: url) { data, response, error in
                 if error != nil {
-                    print(error!)
+                    self.delegate?.didFailWithError(error: error!)
                     return
                 }
                 if let safeData = data {
                     if let weather = self.parseData(weatherData: safeData) {
-                        self.delegate?.didUpdateWeather(weather: weather)
+                        self.delegate?.didUpdateWeather(manageWeather: self, weather: weather)
                     }
                 }
             }
@@ -54,7 +55,7 @@ struct ManageWeather {
             return weather
 
         } catch {
-            print(error)
+            delegate?.didFailWithError(error: error)
             return nil 
         }
         

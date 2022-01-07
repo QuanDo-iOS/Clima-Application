@@ -8,16 +8,17 @@
 
 import UIKit
 
-struct WeatherData : Decodable {
+struct WeatherData : Codable {
     let name : String
     let main : Main
     let weather : [Weather]
 }
 
-struct Main : Decodable {
-    let temp : Double
+struct Main : Codable {
+    let temp : Float
 }
 
-struct Weather : Decodable {
+struct Weather : Codable {
     let description : String
+    let id : Int
 }

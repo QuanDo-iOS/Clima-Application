@@ -11,7 +11,6 @@ import CoreLocation
 
 class WeatherViewController: UIViewController {
     
-
     @IBOutlet weak var conditionImageView: UIImageView!
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
@@ -24,12 +23,12 @@ class WeatherViewController: UIViewController {
         super.viewDidLoad()
         locationManager.delegate = self
         
+        // privacy to access your location
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
         
         manageWeather.delegate = self
         searchTextField.delegate = self
-        
     }
     
     @IBAction func gpsButton(_ sender: UIButton) {
@@ -43,7 +42,6 @@ class WeatherViewController: UIViewController {
 extension WeatherViewController : UITextFieldDelegate {
     @IBAction func searchPressed(_ sender: UIButton) {
         searchTextField.endEditing(true)
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -72,17 +70,16 @@ extension WeatherViewController : UITextFieldDelegate {
 //MARK : - WeatherManagerDelegate
 
 extension WeatherViewController : WeatherManagerDelegate {
-    func didUpdateWeather(manageWeather : ManageWeather , weather : WeatherModel){
+    func didUpdateWeather( weather : WeatherModel){
         DispatchQueue.main.async {
             self.temperatureLabel.text = weather.temperatureString
             self.conditionImageView.image = UIImage(systemName: weather.conditionName)
             self.cityLabel.text = weather.cityName
         }
-        
     }
     
     func didFailWithError(error : Error) {
-        print(error )
+        print(error)
     }
 }
 

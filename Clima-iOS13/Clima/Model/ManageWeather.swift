@@ -10,20 +10,23 @@ import UIKit
 import CoreLocation
 
 protocol WeatherManagerDelegate {
-    func didUpdateWeather(manageWeather : ManageWeather , weather : WeatherModel)
+    func didUpdateWeather( weather : WeatherModel)
     func didFailWithError(error : Error)
 }
 
 struct ManageWeather {
-    let weatherURL = "https://api.openweathermap.org/data/2.5/weather?appid=27641f36eb61f2588881c0c6b39ffc63&units=metric"
+    let weatherURL = "https://api.openweathermap.org/data/2.5/weather?units=metric"
+    let appid = "27641f36eb61f2588881c0c6b39ffc63"
     
+    // create url with cityName
     func fetchWeather(cityName : String) {
-        let urlString = "\(weatherURL)&q=\(cityName)"
+        let urlString = "\(weatherURL)&appid=\(appid)&q=\(cityName)"
         performRequest(urlString: urlString)
     }
     
+    // create url with latitude and longtitude
     func fetchWeather(latitude : CLLocationDegrees  , longitude : CLLocationDegrees) {
-        let urlString = "\(weatherURL)&lat=\(latitude)&lon=\(longitude)"
+        let urlString = "\(weatherURL)&appid=\(appid)&lat=\(latitude)&lon=\(longitude)"
         performRequest(urlString: urlString)
     }
     
@@ -40,7 +43,7 @@ struct ManageWeather {
                 }
                 if let safeData = data {
                     if let weather = self.parseData(weatherData: safeData) {
-                        self.delegate?.didUpdateWeather(manageWeather: self, weather: weather)
+                        self.delegate?.didUpdateWeather( weather: weather)
                     }
                 }
             }
@@ -64,9 +67,5 @@ struct ManageWeather {
             delegate?.didFailWithError(error: error)
             return nil 
         }
-        
     }
-    
-    
-    
 }
